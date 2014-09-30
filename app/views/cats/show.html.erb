@@ -5,23 +5,44 @@
 
   <h1><%= @cat.name %>'s Page!</h1>
   <body>
-    <!-- <ul> -->
-      <%# @cat.attributes.each do |attribute, value| %>
-        <%# next if ['created_at', 'updated_at', 'id'].include?(attribute) %>
-        <!-- <li><%#= attribute %> is <%#= value %></li> -->
-      <%# end %>
-    <!-- </ul> -->
+    <h2>Basic Information</h2>
 
     <table style="width:30%">
       <% @cat.attributes.each do |attribute, value| %>
         <% next if ['created_at', 'updated_at', 'id'].include?(attribute) %>
         <tr>
-          <td><%= attribute %></td>
+          <td><strong><%= attribute.capitalize.gsub("_", " ") %></strong></td>
           <td><%= value %></td>
         </tr>
       <% end %>
     </table>
 
+    <br>
+
+    <h2>Current Requests</h2>
+    <% requests = @cat.cat_rental_requests.sort_by { |req| req.start_date } %>
+    <table style="width:35%">
+      <tr>
+        <td><strong>Start Date</strong></td>
+        <td><strong>End Date</strong></td>
+        <td><strong>Status</strong></td>
+      </tr>
+      <% requests.each do |request| %>
+        <tr>
+          <td><%= request.start_date %></td>
+          <td><%= request.end_date %></td>
+          <td><%= request.status %></td>
+          <% if request.status == 'PENDING' %>
+            <td><%= button_to( "Approve", "#{approve_cat_rental_request_url(request)}") %></td>
+            <td><%= button_to( "DENY", "#{deny_cat_rental_request_url(request)}") %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+
+    <br>
+    <br>
+    <a href=<%= new_cat_rental_request_url %>>Request <%= @cat.name %></a>
     <br>
     <a href=<%= edit_cat_url(@cat) %>>Edit</a>
     <br>

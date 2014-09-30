@@ -1,0 +1,30 @@
+<html>
+  <header>
+    <title><%= @cat.name %></title>
+  </header>
+
+  <h1><%= @cat.name %>'s Page!</h1>
+  <body>
+    <!-- <ul> -->
+      <%# @cat.attributes.each do |attribute, value| %>
+        <%# next if ['created_at', 'updated_at', 'id'].include?(attribute) %>
+        <!-- <li><%#= attribute %> is <%#= value %></li> -->
+      <%# end %>
+    <!-- </ul> -->
+
+    <table style="width:30%">
+      <% @cat.attributes.each do |attribute, value| %>
+        <% next if ['created_at', 'updated_at', 'id'].include?(attribute) %>
+        <tr>
+          <td><%= attribute %></td>
+          <td><%= value %></td>
+        </tr>
+      <% end %>
+    </table>
+
+    <br>
+    <a href=<%= edit_cat_url(@cat) %>>Edit</a>
+    <br>
+    <a href=<%= cats_url %>>Return to index</a>
+  </body>
+</html>

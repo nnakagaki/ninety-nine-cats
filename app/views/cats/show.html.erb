@@ -55,6 +55,7 @@
     <br>
     <% unless current_cat_owner_logged_in?(@cat) %>
       <br>
+      <% flash[:last_cat_id] = @cat.id %>
       <a href="<%= new_cat_rental_request_url %>">Request <%= @cat.name %></a>
     <% end %>
     <% if current_user == User.find(@cat.user_id) %>

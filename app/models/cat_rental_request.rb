@@ -5,8 +5,7 @@ class CatRentalRequest < ActiveRecord::Base
   validates_presence_of :start_date, :end_date
   validates :status, inclusion: { in: STATUSES }
   validate :overlapping_approved_requests
-
-  # TODO VALIDATE STARTDATE < ENDDATE, STARTDATE > TIME.NOW
+  validate :logical_date_choice
 
   belongs_to :cat
   belongs_to :requestor,
@@ -73,6 +72,11 @@ class CatRentalRequest < ActiveRecord::Base
       end
     end
   end
+
+  def logical_date_choice
+    raise 'Hell' if start_date > end_date || start_date < Time.now
+  end
+
 
 
 end

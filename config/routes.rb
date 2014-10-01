@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
   root to: "cats#index"
 
-  resources :cats
 
   # TODO DEAL WITH SETTING DEFAULT CAT IN RENTAL SCREEN
+  # TODO MINIMIZE NUM OF USER/SESSION ROUTES
+
+  resources :users
+
+  resources :cats
+
+  resource :session
 
   resources :cat_rental_requests, only: [:new, :create] do
     member do

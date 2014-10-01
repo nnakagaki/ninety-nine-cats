@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>NinetyNineCats</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <% if current_user %>
+    <h3>You are logged in as <%= current_user.user_name %>...</h3>
+    <br>
+    <%= button_to( "Logout", "#{session_url}", method: :delete) %>
+    <br>
+  <% else %>
+  <%= button_to( "Login!", "#{new_session_url}", method: :get) %>
+    <br>
+    <%= button_to( "Sign up!", "#{new_user_url}", method: :get) %>
+  <% end %>
 
-<%= yield %>
+  <%= yield %>
 
 </body>
 </html>

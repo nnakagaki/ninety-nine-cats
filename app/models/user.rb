@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
 
   validates :password, length: { minimum: 6, allow_nil: true }
 
+  has_many :cats, :dependent => :destroy
+  has_many :cat_rental_requests
+
   def self.find_by_credentials(user_params)
     user = User.find_by(user_name: user_params[:user_name])
     return user if user.is_password?(user_params[:password])

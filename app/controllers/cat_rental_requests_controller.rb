@@ -1,5 +1,7 @@
 class CatRentalRequestsController < ApplicationController
 
+  before_action :verify_user, only: [:approve, :deny]
+
   def new
     @cats = Cat.all
     render :new
@@ -33,7 +35,11 @@ class CatRentalRequestsController < ApplicationController
 
   private
   def rental_params
-    params[:cat_rental_request].permit(:cat_id, :start_date, :end_date)
+    r_params = params[:cat_rental_request].permit(
+        :cat_id, :start_date, :end_date)
+    r_params[:user_id] = current_user.id
+
+    r_params
   end
 
 end

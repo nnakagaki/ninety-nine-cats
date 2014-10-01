@@ -11,6 +11,9 @@
   <h1><%= action %></h1>
 
   <form action="<%= action_url %>" method="POST">
+    <input type="hidden"
+           name="authenticity_token"
+           value="<%= form_authenticity_token %>">
     <% if @cat.persisted? %>
       <input type="hidden" name="_method" value="PATCH">
     <% end %>
@@ -53,6 +56,9 @@
 
     <br>
     <input type="submit" value="<%= action %>">
+
   </form>
 
+    <br><br>
+    <a href=<%= cats_url %>>Return to index</a>
 </html>

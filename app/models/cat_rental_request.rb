@@ -9,6 +9,9 @@ class CatRentalRequest < ActiveRecord::Base
   # TODO VALIDATE STARTDATE < ENDDATE, STARTDATE > TIME.NOW
 
   belongs_to :cat
+  belongs_to :requestor,
+    class_name: "User",
+    foreign_key: :user_id
 
   def approve!
     self.status = 'APPROVED'
@@ -66,7 +69,7 @@ class CatRentalRequest < ActiveRecord::Base
     return if self.status != "APPROVED"
     overlapping_requests.each do |req|
       if req.status == "APPROVED"
-        errors[:date] << "This cat has already been booked"
+        raise "This cat has already been booked"
       end
     end
   end

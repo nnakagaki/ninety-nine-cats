@@ -6,14 +6,14 @@ class Cat < ActiveRecord::Base
   validates :sex, inclusion: { in: ["M", "F"] }
   validates :color, inclusion: { in: COLORS }
 
-  has_many :cat_rental_requests, :dependent => :destroy
+  has_many :cat_rental_requests, dependent: :destroy
 
   belongs_to :owner,
     class_name: "User",
     foreign_key: :user_id
 
   def age
-    (Date.now - self.birth_date).year
+    (Date.today - self.birth_date).year
   end
 
 end

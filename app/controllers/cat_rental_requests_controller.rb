@@ -12,6 +12,7 @@ class CatRentalRequestsController < ApplicationController
     if @request.save
       redirect_to cat_url(@request.cat_id)
     else
+      flash[:errors] = @request.errors.full_messages
       @cats = Cat.all
       render :new
     end
@@ -19,27 +20,30 @@ class CatRentalRequestsController < ApplicationController
 
   def approve
     @request = CatRentalRequest.find(params[:id])
-    @request.approve!
-    @cat = Cat.find(@request.cat_id)
 
-    redirect_to cat_url(@cat)
+    CatRentalRequest.transaction do
+      @request.approve!
+      overlapping_pending_requests.each do |req|
+        req.deny!
+      end
+    end
+
+    redirect_to cat_url(@request.cat_id)
   end
 
   def deny
     @request = CatRentalRequest.find(params[:id])
     @request.deny!
-    @cat = Cat.find(@request.cat_id)
 
-    redirect_to cat_url(@cat)
+    redirect_to cat_url(@request.cat_id)
   end
 
   private
-  def rental_params
-    r_params = params[:cat_rental_request].permit(
-        :cat_id, :start_date, :end_date)
-    r_params[:user_id] = current_user.id
 
-    r_params
+  def rental_params
+    r_params = params.require(:cat_rental_request).permit(
+        :cat_id, :start_date, :end_date)
+    r_params.merge(user_id: current_user.id)
   end
 
 end

@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
   root to: "cats#index"
 
-  # TODO MINIMIZE NUM OF USER/SESSION ROUTES
+  resources :users, only: [:new, :create]
 
-  resources :users
+  resources :cats, only: [:new, :create, :edit, :update, :show, :index]
 
-  resources :cats
-
-  resource :session
+  resource :session, only: [:new, :create, :destroy]
 
   resources :cat_rental_requests, only: [:new, :create] do
     member do

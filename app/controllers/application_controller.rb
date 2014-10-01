@@ -9,8 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def login_user!(user)
-    token = user.reset_session_token!
-    session[:session_token] = token
+    session[:session_token] = user.reset_session_token!
   end
 
   def signed_in?
@@ -18,7 +17,6 @@ class ApplicationController < ActionController::Base
   end
 
   def check_login
-    return if params[:_method] == "delete"
     redirect_to cats_url if signed_in?
   end
 

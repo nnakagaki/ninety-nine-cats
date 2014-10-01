@@ -1,4 +1,5 @@
 class CatsController < ApplicationController
+
   before_action :verify_user, only: [:edit, :update]
 
   def index
@@ -29,7 +30,6 @@ class CatsController < ApplicationController
     if @cat.save
       redirect_to cat_url(@cat)
     else
-      p 'you messed up'
       render :new
     end
   end
@@ -39,12 +39,11 @@ class CatsController < ApplicationController
   end
 
   private
-  def cat_params
-    c_params = params[:cat].permit(
-        :name, :sex, :color, :birth_date, :description)
-    c_params[:user_id] = current_user.id
-    c_params
-  end
 
+  def cat_params
+    c_params = params.require(:cat).permit(
+        :name, :sex, :color, :birth_date, :description)
+    c_params.merge({ user_id: current_user.id })
+  end
 
 end

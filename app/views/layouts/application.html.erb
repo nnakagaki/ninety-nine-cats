@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<%= flash[:errors] %>
 <body>
   <% if current_user %>
     <h3>You are logged in as <%= current_user.user_name %>...</h3>

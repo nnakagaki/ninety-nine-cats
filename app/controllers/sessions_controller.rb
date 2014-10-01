@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-  before_action :check_login
+
+  before_action :check_login, except: :destroy
 
   def new
     render :new
@@ -11,6 +12,7 @@ class SessionsController < ApplicationController
       login_user!(user)
       redirect_to cats_url
     else
+      flash[:errors] = "Wrong user name and password combination"
       render :new
     end
   end
@@ -22,7 +24,9 @@ class SessionsController < ApplicationController
   end
 
   private
+
   def user_params
-    params[:user].permit(:user_name, :password)
+    params.require(:user).permit(:user_name, :password)
   end
+
 end

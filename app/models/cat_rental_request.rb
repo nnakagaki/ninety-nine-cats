@@ -14,20 +14,13 @@ class CatRentalRequest < ActiveRecord::Base
 
   def approve!
     self.status = 'APPROVED'
-    if self.save
-      overlapping_pending_requests.each do |req|
-        req.deny!
-      end
-    else
-      raise 'HELL'
-    end
+    self.save!
   end
 
   def deny!
     self.status = 'DENIED'
     self.save!
   end
-
 
   private
 
@@ -43,10 +36,11 @@ class CatRentalRequest < ActiveRecord::Base
       end_date < :start_date)
     SQL
 
-    CatRentalRequest.find_by_sql([sql, start_date: self.start_date, end_date: self.end_date, cat_id: self.cat_id])
-
+    CatRentalRequest.find_by_sql([sql,
+      start_date: self.start_date,
+      end_date: self.end_date,
+      cat_id: self.cat_id])
   end
-
 
   def overlapping_requests
     sql = <<-SQL
@@ -61,22 +55,25 @@ class CatRentalRequest < ActiveRecord::Base
 
     SQL
 
-    CatRentalRequest.find_by_sql([sql, start_date: self.start_date, end_date: self.end_date, cat_id: self.cat_id])
+    CatRentalRequest.find_by_sql([sql,
+      start_date: self.start_date,
+      end_date: self.end_date,
+      cat_id: self.cat_id])
   end
 
   def overlapping_approved_requests
     return if self.status != "APPROVED"
-    overlapping_requests.each do |req|
-      if req.status == "APPROVED"
-        raise "This cat has already been booked"
-      end
+    if overlapping_requests.any? do |req|
+      req.status == "APPROVED"
+    end
+      errors[:base] << "This cat has already been booked"
     end
   end
 
   def logical_date_choice
-    raise 'Hell' if start_date > end_date || start_date < Time.now
+    return unless start_date && end_date
+    errors[:base] << 'Start date must precede end date' if start_date > end_date
+    errors[:base] << 'Start date must be after today' if start_date < Date.today
   end
-
-
 
 end

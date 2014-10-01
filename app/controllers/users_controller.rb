@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+
   before_action :check_login
 
   def new
@@ -11,17 +12,15 @@ class UsersController < ApplicationController
       login_user!(@user)
       redirect_to cats_url
     else
+      flash[:errors] = @user.errors.full_messages
       render :new
     end
   end
 
-  def show
-    @user = User.find(params[:id])
-    render :show
+  private
+
+  def user_params
+    params.require(:user).permit(:user_name, :password)
   end
 
-  private
-  def user_params
-    params[:user].permit(:user_name, :password)
-  end
 end

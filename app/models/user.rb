@@ -8,11 +8,12 @@ class User < ActiveRecord::Base
 
   validates :password, length: { minimum: 6, allow_nil: true }
 
-  has_many :cats, :dependent => :destroy
-  has_many :cat_rental_requests
+  has_many :cats, dependent: :destroy
+  has_many :cat_rental_requests, dependent: :destroy
 
   def self.find_by_credentials(user_params)
     user = User.find_by(user_name: user_params[:user_name])
+    return nil if user.nil?
     return user if user.is_password?(user_params[:password])
 
     nil
@@ -28,17 +29,13 @@ class User < ActiveRecord::Base
   end
 
   def reset_session_token!
-    st = SecureRandom::urlsafe_base64(16)
-    self.session_token = st
+    self.session_token = SecureRandom::urlsafe_base64(16)
     self.save!
-    st
+    self.session_token
   end
 
   private
   def set_session_token
-    st = SecureRandom::urlsafe_base64(16)
-    self.session_token ||= st
-    self.save!
-    self.session_token
+    self.session_token ||= SecureRandom::urlsafe_base64(16)
   end
 end

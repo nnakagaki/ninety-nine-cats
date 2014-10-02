@@ -23,7 +23,7 @@ class CatRentalRequestsController < ApplicationController
 
     CatRentalRequest.transaction do
       @request.approve!
-      overlapping_pending_requests.each do |req|
+      @request.overlapping_pending_requests.each do |req|
         req.deny!
       end
     end

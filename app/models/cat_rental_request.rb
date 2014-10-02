@@ -22,8 +22,6 @@ class CatRentalRequest < ActiveRecord::Base
     self.save!
   end
 
-  private
-
   def overlapping_pending_requests
     sql = <<-SQL
     SELECT
@@ -41,6 +39,8 @@ class CatRentalRequest < ActiveRecord::Base
       end_date: self.end_date,
       cat_id: self.cat_id])
   end
+
+  private
 
   def overlapping_requests
     sql = <<-SQL
